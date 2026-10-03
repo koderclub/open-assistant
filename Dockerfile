@@ -113,10 +113,11 @@ RUN mkdir -p /app/.patchright-browsers && \
     python -m patchright install chromium && \
     chmod -R o+rx /app/.patchright-browsers
 
-# Install Scrapling's Camoufox browser for stealth fetching (optional but recommended)
+# Verify Scrapling stealth fetcher installation.
+# StealthyFetcher is initialized lazily by the application when needed.
 RUN . /app/.venv/bin/activate && \
-    python -c "import scrapling; scrapling.StealthyFetcher.setup()" || \
-    echo "Camoufox setup skipped (stealth mode will fall back to dynamic/http)"
+    python -c "from scrapling.fetchers import StealthyFetcher; print('Scrapling StealthyFetcher OK:', StealthyFetcher)" || \
+    echo "Scrapling StealthyFetcher unavailable (stealth mode will fall back to dynamic/http)"
 
 # Pre-download the ONNX embedding model so it's cached in the image (~80MB)
 ENV HF_HOME=/app/.hf-cache
